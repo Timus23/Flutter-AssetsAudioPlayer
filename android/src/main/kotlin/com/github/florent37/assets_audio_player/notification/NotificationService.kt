@@ -138,7 +138,7 @@ class NotificationService : Service() {
                 //prev
                 .apply {
                     if(notificationSettings.prevEnabled) {
-                        addAction(R.drawable.ic_action_skip_previous, "prev",
+                        addAction(R.drawable.rewind, "prev",
                                 PendingIntent.getBroadcast(context, 0, createReturnIntent(forAction = NotificationAction.ACTION_PREV, forPlayer = action.playerId,audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
                         )
                     }
@@ -147,7 +147,7 @@ class NotificationService : Service() {
                 .apply {
                     if(notificationSettings.playPauseEnabled) {
                         addAction(
-                                if (action.isPlaying) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow,
+                                if (action.isPlaying) R.drawable.pause else R.drawable.play_arrow,
                                 if (action.isPlaying) "pause" else "play",
                                 pendingToggleIntent
                         )
@@ -156,7 +156,7 @@ class NotificationService : Service() {
                 //next
                 .apply {
                     if(notificationSettings.nextEnabled) {
-                        addAction(R.drawable.ic_action_skip_next, "next", PendingIntent.getBroadcast(context, 0,
+                        addAction(R.drawable.fast_forward, "next", PendingIntent.getBroadcast(context, 0,
                                 createReturnIntent(forAction = NotificationAction.ACTION_NEXT, forPlayer = action.playerId,audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
                         )
                     }
@@ -164,7 +164,7 @@ class NotificationService : Service() {
                 //stop
                 .apply {
                     if(notificationSettings.stopEnabled){
-                        addAction(R.drawable.ic_action_stop, "stop", PendingIntent.getBroadcast(context, 0,
+                        addAction(R.drawable.stop, "stop", PendingIntent.getBroadcast(context, 0,
                                 createReturnIntent(forAction = NotificationAction.ACTION_STOP, forPlayer = action.playerId,audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
                         )
                     }
