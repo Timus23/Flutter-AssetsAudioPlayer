@@ -237,21 +237,27 @@ public class Player : NSObject, AVAudioPlayerDelegate {
             return .success
         }
         
-        // Add handler for Pause Command
-        commandCenter.previousTrackCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).prevEnabled
-        self.targets["prev"] = commandCenter.previousTrackCommand.addTarget { [unowned self] event in
+        // Add handler for previous  Command
+        commandCenter.seekBackwardCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).prevEnabled
+        self.targets["prev"] = commandCenter.seekBackwardCommand.addTarget { [unowned self] event in
             self.channel.invokeMethod(Music.METHOD_PREV, arguments: [])
             
             return .success
         }
                 
-        // Add handler for Pause Command
-        commandCenter.nextTrackCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).nextEnabled
-        self.targets["next"] = commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+        // Add handler for next Command
+        commandCenter.seekForwardCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).nextEnabled
+
+        self.targets["next"] = commandCenter.seekForwardCommand.addTarget { [unowned self] event in
             self.channel.invokeMethod(Music.METHOD_NEXT, arguments: [])
             
             return .success
         }
+
+
+commandCenter.nextTrackCommand.isEnabled=false
+commandCenter.previousTrackCommand.isEnabled=false
+
         
         //https://stackoverflow.com/questions/34563451/set-mpnowplayinginfocenter-with-other-background-audio-playing
         //This isn't currently possible in iOS. Even just changing your category options to .MixWithOthers causes your nowPlayingInfo to be ignored.
@@ -278,10 +284,10 @@ public class Player : NSObject, AVAudioPlayerDelegate {
             commandCenter.pauseCommand.removeTarget(t);
         }
         if let t = self.targets["prev"] {
-            commandCenter.previousTrackCommand.removeTarget(t);
+            commandCenter.seekBackwardCommand.removeTarget(t);
         }
         if let t = self.targets["next"] {
-            commandCenter.nextTrackCommand.removeTarget(t);
+            commandCenter.seekForwardCommand.removeTarget(t);
         }
         self.targets.removeAll()
     }
