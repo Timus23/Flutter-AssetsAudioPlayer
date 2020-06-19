@@ -237,7 +237,37 @@ public class Player : NSObject, AVAudioPlayerDelegate {
             return .success
         }
         
-        // Add handler for previous  Command
+
+        
+
+
+
+// TODO: to comment this out afte testing if library edit for ios is not going to be done
+     // Add handler for previous  Command
+        // commandCenter.previousTrackCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).prevEnabled
+        // self.targets["prev"] = commandCenter.previousTrackCommand.addTarget { [unowned self] event in
+        //     self.channel.invokeMethod(Music.METHOD_PREV, arguments: [])
+            
+        //     return .success
+        // }
+                
+        // // Add handler for next Command
+        // commandCenter.nextTrackCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).nextEnabled
+
+        // self.targets["next"] = commandCenter.nextTrackCommand.addTarget { [unowned self] event in
+        //     self.channel.invokeMethod(Music.METHOD_NEXT, arguments: [])
+            
+        //     return .success
+        // }
+
+
+
+
+
+
+
+
+        // Add handler for skip baackward  Command
         commandCenter.seekBackwardCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).prevEnabled
         self.targets["prev"] = commandCenter.seekBackwardCommand.addTarget { [unowned self] event in
             self.channel.invokeMethod(Music.METHOD_PREV, arguments: [])
@@ -245,7 +275,7 @@ public class Player : NSObject, AVAudioPlayerDelegate {
             return .success
         }
                 
-        // Add handler for next Command
+        // Add handler for skip forward Command
         commandCenter.seekForwardCommand.isEnabled = (self.notificationSettings ?? NotificationSettings()).nextEnabled
 
         self.targets["next"] = commandCenter.seekForwardCommand.addTarget { [unowned self] event in
@@ -254,9 +284,6 @@ public class Player : NSObject, AVAudioPlayerDelegate {
             return .success
         }
 
-
-commandCenter.nextTrackCommand.isEnabled=false
-commandCenter.previousTrackCommand.isEnabled=false
 
         
         //https://stackoverflow.com/questions/34563451/set-mpnowplayinginfocenter-with-other-background-audio-playing
@@ -283,12 +310,28 @@ commandCenter.previousTrackCommand.isEnabled=false
         if let t = self.targets["pause"] {
             commandCenter.pauseCommand.removeTarget(t);
         }
+
+
+// TODO: to comment this out afte testing if library edit for ios is not going to be done
+    // if let t = self.targets["prev"] {
+    //         commandCenter.previousTrackCommand.removeTarget(t);
+    //     }
+    //     if let t = self.targets["next"] {
+    //         commandCenter.nextTrackCommand.removeTarget(t);
+    //     }
+
+
+
+
+
         if let t = self.targets["prev"] {
             commandCenter.seekBackwardCommand.removeTarget(t);
         }
         if let t = self.targets["next"] {
             commandCenter.seekForwardCommand.removeTarget(t);
         }
+
+
         self.targets.removeAll()
     }
     
@@ -462,8 +505,7 @@ commandCenter.previousTrackCommand.isEnabled=false
 
     func open(assetPath: String,
               assetPackage: String?,
-              audioType: String,
-              autoStart: Bool,
+              audioType: String,              autoStart: Bool,
               volume: Double,
               seek: Int?,
               respectSilentMode: Bool,
