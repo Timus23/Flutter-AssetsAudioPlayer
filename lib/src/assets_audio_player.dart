@@ -511,6 +511,7 @@ class AssetsAudioPlayer {
         case METHOD_CURRENT:
           if (call.arguments == null) {
             final current = this._current.value;
+
             if (current != null) {
               final finishedPlay = Playing(
                 audio: current.audio,
@@ -518,8 +519,9 @@ class AssetsAudioPlayer {
                 hasNext: false,
                 playlist: current.playlist,
               );
-              _playlistAudioFinished.add(finishedPlay);
+              // _playlistAudioFinished.add(finishedPlay);
             }
+
             _playlistFinished.value = true;
             _current.value = null;
             _playerState.value = PlayerState.stop;
