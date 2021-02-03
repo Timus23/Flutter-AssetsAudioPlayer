@@ -170,6 +170,7 @@ class AssetsAudioPlayer {
   Audio _lastOpenedAssetsAudio;
 
   _CurrentPlaylist _playlist;
+  bool _acceptUserOpen = true; //if false, user cannot call open method
 
   final String id;
 
@@ -759,7 +760,7 @@ class AssetsAudioPlayer {
 
   Future<void> _openPlaylistCurrent(
       {bool autoStart = true, Duration seek}) async {
-    if (_playlist != null) {
+    if (_playlist != null && _isBuffering.value == false) {
       return _open(
         _playlist.currentAudio(),
         forcedVolume: _playlist.volume,
@@ -1110,30 +1111,46 @@ class AssetsAudioPlayer {
     NotificationSettings notificationSettings,
     LoopMode loopMode = LoopMode.none,
     PlayInBackground playInBackground = _DEFAULT_PLAY_IN_BACKGROUND,
+    bool forceOpen = false,
   }) async {
-    Playlist playlist;
-    if (playable is Playlist &&
-        playable.audios != null &&
-        playable.audios.length > 0) {
-      playlist = playable;
-    } else if (playable is Audio) {
-      playlist = Playlist(audios: [playable]);
+    if (forceOpen) {
+      _acceptUserOpen = true;
     }
 
-    if (playlist != null) {
-      await _openPlaylist(
-        playlist,
-        autoStart: autoStart,
-        volume: volume,
-        respectSilentMode: respectSilentMode,
-        showNotification: showNotification,
-        seek: seek,
-        loopMode: loopMode,
-        playSpeed: playSpeed,
-        notificationSettings:
-            notificationSettings ?? defaultNotificationSettings,
-        playInBackground: playInBackground,
-      );
+    if (_acceptUserOpen == false) {
+      return;
+    }
+
+    try {
+      _acceptUserOpen = false;
+      Playlist playlist;
+      if (playable is Playlist &&
+          playable.audios != null &&
+          playable.audios.length > 0) {
+        playlist = playable;
+      } else if (playable is Audio) {
+        playlist = Playlist(audios: [playable]);
+      }
+
+      if (playlist != null) {
+        await _openPlaylist(
+          playlist,
+          autoStart: autoStart,
+          volume: volume,
+          respectSilentMode: respectSilentMode,
+          showNotification: showNotification,
+          seek: seek,
+          loopMode: loopMode,
+          playSpeed: playSpeed,
+          notificationSettings:
+              notificationSettings ?? defaultNotificationSettings,
+          playInBackground: playInBackground,
+        );
+      }
+      _acceptUserOpen = true;
+    } catch (t) {
+      _acceptUserOpen = true;
+      throw t;
     }
   }
 
