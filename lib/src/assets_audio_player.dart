@@ -1295,7 +1295,9 @@ class AssetsAudioPlayer {
   }
 
   /// Tells the media player to stop the current song, then release the MediaPlayer
-  ///     _assetsAudioPlayer.stop();
+  /// If `playlistFinished` and `playlistAudioFinished` stream are listened to , it emits data into
+  /// those stream.
+  /// If `sendCallback= false` it does not emait data into `playlidtFinished` stream which prevents
   ///
   Future<void> stop({bool sendCallback = true}) async {
     _sendCallbackonFinished = sendCallback;
