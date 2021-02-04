@@ -191,6 +191,7 @@ class NotificationService : Service() {
 
             //by manifest
             val appInfos = context.packageManager.getApplicationInfo(context.packageName, PackageManager.GET_META_DATA)
+<<<<<<< HEAD
             val customIconFromManifest = appInfos.metaData.get(manifestName) as? Int
             if (customIconFromManifest != null) {
                 return customIconFromManifest
@@ -206,6 +207,12 @@ class NotificationService : Service() {
     private fun getResourceID(iconName: String?): Int? {
         return iconName?.let { name ->
             resources.getIdentifier(name, "drawable", applicationContext.packageName)
+=======
+            val customIcon = appInfos.metaData.get("assets.audio.player.notification.icon") as? Int
+            return customIcon ?: R.drawable.ic_action_play_arrow
+        } catch (t : Throwable) {
+            return R.drawable.ic_action_play_arrow
+>>>>>>> custom icon changed in player
         }
     }
 
@@ -236,9 +243,15 @@ class NotificationService : Service() {
         val notification = NotificationCompat.Builder(this, CHANNEL_ID)
                 //prev
                 .apply {
+<<<<<<< HEAD
                     if (notificationSettings.prevEnabled) {
                         addAction(getPrevIcon(context, action.notificationSettings.previousIcon), "prev",
                                 PendingIntent.getBroadcast(context, 0, createReturnIntent(forAction = NotificationAction.ACTION_PREV, forPlayer = action.playerId, audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
+=======
+                    if(notificationSettings.prevEnabled) {
+                        addAction(R.drawable.ic_action_skip_previous, "prev",
+                                PendingIntent.getBroadcast(context, 0, createReturnIntent(forAction = NotificationAction.ACTION_PREV, forPlayer = action.playerId,audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
+>>>>>>> custom icon changed in player
                         )
                     }
                 }
@@ -246,7 +259,11 @@ class NotificationService : Service() {
                 .apply {
                     if (notificationSettings.playPauseEnabled) {
                         addAction(
+<<<<<<< HEAD
                                 if (action.isPlaying) getPauseIcon(context, action.notificationSettings.pauseIcon) else getPlayIcon(context, action.notificationSettings.playIcon),
+=======
+                                if (action.isPlaying) R.drawable.ic_action_pause else R.drawable.ic_action_play_arrow,
+>>>>>>> custom icon changed in player
                                 if (action.isPlaying) "pause" else "play",
                                 pendingToggleIntent
                         )
@@ -254,38 +271,43 @@ class NotificationService : Service() {
                 }
                 //next
                 .apply {
+<<<<<<< HEAD
                     if (notificationSettings.nextEnabled) {
                         addAction(getNextIcon(context, action.notificationSettings.nextIcon), "next", PendingIntent.getBroadcast(context, 0,
                                 createReturnIntent(forAction = NotificationAction.ACTION_NEXT, forPlayer = action.playerId, audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
+=======
+                    if(notificationSettings.nextEnabled) {
+                        addAction(R.drawable.ic_action_skip_next, "next", PendingIntent.getBroadcast(context, 0,
+                                createReturnIntent(forAction = NotificationAction.ACTION_NEXT, forPlayer = action.playerId,audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
+>>>>>>> custom icon changed in player
                         )
                     }
                 }
                 //stop
                 .apply {
+<<<<<<< HEAD
                     if (notificationSettings.stopEnabled) {
                         addAction(getStopIcon(context, action.notificationSettings.stopIcon), "stop", PendingIntent.getBroadcast(context, 0,
                                 createReturnIntent(forAction = NotificationAction.ACTION_STOP, forPlayer = action.playerId, audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
+=======
+                    if(notificationSettings.stopEnabled){
+                        addAction(R.drawable.ic_action_stop, "stop", PendingIntent.getBroadcast(context, 0,
+                                createReturnIntent(forAction = NotificationAction.ACTION_STOP, forPlayer = action.playerId,audioMetas = action.audioMetas), PendingIntent.FLAG_UPDATE_CURRENT)
+>>>>>>> custom icon changed in player
                         )
                     }
                 }
                 .setStyle(androidx.media.app.NotificationCompat.MediaStyle()
-                        .also {
-                            when (notificationSettings.numberEnabled()) {
-                                1 -> it.setShowActionsInCompactView(0)
-                                2 -> it.setShowActionsInCompactView(0, 1)
-                                3 -> it.setShowActionsInCompactView(0, 1, 2)
-                                else -> it.setShowActionsInCompactView()
-                            }
-                        }
+                        .setShowActionsInCompactView(0, 1, 2)
                         .setShowCancelButton(true)
                         .setMediaSession(mediaSession.sessionToken)
                 )
                 .setSmallIcon(getSmallIcon(context))
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                .setVibrate(longArrayOf(0L))
                 .setPriority(NotificationCompat.PRIORITY_MAX)
                 .setContentTitle(action.audioMetas.title)
                 .setContentText(action.audioMetas.artist)
+                .setOnlyAlertOnce(true)
                 .also {
                     if (!action.audioMetas.album.isNullOrEmpty()) {
                         it.setSubText(action.audioMetas.album)
